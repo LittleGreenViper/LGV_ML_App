@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <Group
+      location = "container:"
+      name = "Project_Meta">
+      <FileRef
+         location = "group:CHANGELOG.md">
+      </FileRef>
+      <FileRef
+         location = "group:jazzy.command">
+      </FileRef>
+      <FileRef
+         location = "group:LICENSE">
+      </FileRef>
+      <FileRef
+         location = "group:README.md">
+      </FileRef>
+      <FileRef
+         location = "group:PRIVACY.md">
+      </FileRef>
+      <FileRef
+         location = "group:PrivacyInfo.xcprivacy">
+      </FileRef>
+      <FileRef
+         location = "group:CODEOWNERS">
+      </FileRef>
+      <FileRef
+         location = "group:LGV.png">
+      </FileRef>
+   </Group>
+   <FileRef
+      location = "group:LGV_ML_App.xcodeproj">
+   </FileRef>
+</Workspace>

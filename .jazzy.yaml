@@ -1,0 +1,14 @@
+author: 'Little Green Viper Software Development LLC'
+author_url: https://littlegreenviper.com
+hide_documentation_coverage: true
+github_url: https://github.com/LittleGreenViper/LGV_ML_App
+title: 'LGV_ML_App'
+build_tool_arguments:
+    - "-workspace"
+    - "LGV_ML_App.xcworkspace"
+    - "-scheme"
+    - "LGV_ML_App"
+
+copyright: '© 2024 [Little Green Viper Software Development LLC](https://littlegreenviper.com)'
+min_acl: internal
+theme: fullwidth
