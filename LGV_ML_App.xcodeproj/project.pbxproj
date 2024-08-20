@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D45DDFD62C7501CB008503A1 /* LGV_ML_Trainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45DDFD52C7501CB008503A1 /* LGV_ML_Trainer.swift */; };
+		D45DDFDB2C7502D1008503A1 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45DDFDA2C7502D1008503A1 /* main.swift */; };
+		D45DDFDE2C750346008503A1 /* SwiftBMLSDK in Frameworks */ = {isa = PBXBuildFile; productRef = D45DDFDD2C750346008503A1 /* SwiftBMLSDK */; };
 		D4B704502C73D3FF0048691D /* RVS_Generic_Swift_Toolbox in Frameworks */ = {isa = PBXBuildFile; productRef = D4B7044F2C73D3FF0048691D /* RVS_Generic_Swift_Toolbox */; };
 		D4B704532C73D40F0048691D /* RVS_Persistent_Prefs in Frameworks */ = {isa = PBXBuildFile; productRef = D4B704522C73D40F0048691D /* RVS_Persistent_Prefs */; };
 		D4B704562C73D4210048691D /* RVS_UIKit_Toolbox in Frameworks */ = {isa = PBXBuildFile; productRef = D4B704552C73D4210048691D /* RVS_UIKit_Toolbox */; };
@@ -21,7 +24,22 @@
 		D4F8773C2C73D01A001E2E20 /* LGV_ML_App_ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F877342C73D01A001E2E20 /* LGV_ML_App_ViewController.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		D45DDFD12C7501CB008503A1 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		D45DDFD32C7501CB008503A1 /* LGV_ML_Trainer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = LGV_ML_Trainer; sourceTree = BUILT_PRODUCTS_DIR; };
+		D45DDFD52C7501CB008503A1 /* LGV_ML_Trainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LGV_ML_Trainer.swift; sourceTree = "<group>"; };
+		D45DDFDA2C7502D1008503A1 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		D4C06A062C73D8AE00D1C94D /* LGV_ML_App.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = LGV_ML_App.docc; sourceTree = "<group>"; };
 		D4D4411C2C73D1AE000ACA58 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		D4D4411E2C73D27F000ACA58 /* Warnings.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Warnings.xcconfig; sourceTree = "<group>"; };
@@ -37,6 +55,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		D45DDFD02C7501CB008503A1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D45DDFDE2C750346008503A1 /* SwiftBMLSDK in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D4F8770E2C73CF76001E2E20 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -68,6 +94,22 @@
 			path = ViewControllers;
 			sourceTree = "<group>";
 		};
+		D45DDFD42C7501CB008503A1 /* LGV_ML_Trainer */ = {
+			isa = PBXGroup;
+			children = (
+				D45DDFD52C7501CB008503A1 /* LGV_ML_Trainer.swift */,
+				D45DDFDA2C7502D1008503A1 /* main.swift */,
+			);
+			path = LGV_ML_Trainer;
+			sourceTree = "<group>";
+		};
+		D45DDFDC2C750346008503A1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		D4D4411F2C73D27F000ACA58 /* Meta */ = {
 			isa = PBXGroup;
 			children = (
@@ -83,6 +125,7 @@
 				D4D4411F2C73D27F000ACA58 /* Meta */,
 				D4F877352C73D01A001E2E20 /* Sources */,
 				D4F877122C73CF76001E2E20 /* Products */,
+				D45DDFDC2C750346008503A1 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -90,6 +133,7 @@
 			isa = PBXGroup;
 			children = (
 				D4F877112C73CF76001E2E20 /* LGV_ML_App.app */,
+				D45DDFD32C7501CB008503A1 /* LGV_ML_Trainer */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -117,6 +161,7 @@
 		D4F877352C73D01A001E2E20 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				D45DDFD42C7501CB008503A1 /* LGV_ML_Trainer */,
 				D4F8772A2C73D01A001E2E20 /* LGV_ML_App */,
 			);
 			path = Sources;
@@ -136,6 +181,26 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		D45DDFD22C7501CB008503A1 /* LGV_ML_Trainer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D45DDFD92C7501CB008503A1 /* Build configuration list for PBXNativeTarget "LGV_ML_Trainer" */;
+			buildPhases = (
+				D45DDFCF2C7501CB008503A1 /* Sources */,
+				D45DDFD02C7501CB008503A1 /* Frameworks */,
+				D45DDFD12C7501CB008503A1 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LGV_ML_Trainer;
+			packageProductDependencies = (
+				D45DDFDD2C750346008503A1 /* SwiftBMLSDK */,
+			);
+			productName = LGV_ML_Trainer;
+			productReference = D45DDFD32C7501CB008503A1 /* LGV_ML_Trainer */;
+			productType = "com.apple.product-type.tool";
+		};
 		D4F877102C73CF76001E2E20 /* LGV_ML_App */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = D4F877252C73CF77001E2E20 /* Build configuration list for PBXNativeTarget "LGV_ML_App" */;
@@ -169,6 +234,9 @@
 				LastSwiftUpdateCheck = 1540;
 				LastUpgradeCheck = 1540;
 				TargetAttributes = {
+					D45DDFD22C7501CB008503A1 = {
+						CreatedOnToolsVersion = 15.4;
+					};
 					D4F877102C73CF76001E2E20 = {
 						CreatedOnToolsVersion = 15.4;
 					};
@@ -194,6 +262,7 @@
 			projectRoot = "";
 			targets = (
 				D4F877102C73CF76001E2E20 /* LGV_ML_App */,
+				D45DDFD22C7501CB008503A1 /* LGV_ML_Trainer */,
 			);
 		};
 /* End PBXProject section */
@@ -213,6 +282,15 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		D45DDFCF2C7501CB008503A1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D45DDFDB2C7502D1008503A1 /* main.swift in Sources */,
+				D45DDFD62C7501CB008503A1 /* LGV_ML_Trainer.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D4F8770D2C73CF76001E2E20 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -254,6 +332,34 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		D45DDFD72C7501CB008503A1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = P53V4JS928;
+				ENABLE_HARDENED_RUNTIME = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.littlegreenviper.MLT;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		D45DDFD82C7501CB008503A1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = P53V4JS928;
+				ENABLE_HARDENED_RUNTIME = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.littlegreenviper.MLT;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 		D4F877232C73CF77001E2E20 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D4D4411E2C73D27F000ACA58 /* Warnings.xcconfig */;
@@ -309,6 +415,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -367,6 +474,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -434,6 +542,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		D45DDFD92C7501CB008503A1 /* Build configuration list for PBXNativeTarget "LGV_ML_Trainer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D45DDFD72C7501CB008503A1 /* Debug */,
+				D45DDFD82C7501CB008503A1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		D4F8770C2C73CF76001E2E20 /* Build configuration list for PBXProject "LGV_ML_App" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -490,6 +607,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		D45DDFDD2C750346008503A1 /* SwiftBMLSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D4D441202C73D2B6000ACA58 /* XCRemoteSwiftPackageReference "SwiftBMLSDK" */;
+			productName = SwiftBMLSDK;
+		};
 		D4B7044F2C73D3FF0048691D /* RVS_Generic_Swift_Toolbox */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = D4B7044E2C73D3FF0048691D /* XCRemoteSwiftPackageReference "RVS_Generic_Swift_Toolbox" */;
