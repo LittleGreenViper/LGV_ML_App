@@ -37,7 +37,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		D45DDFD32C7501CB008503A1 /* LGV_ML_Trainer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = LGV_ML_Trainer; sourceTree = BUILT_PRODUCTS_DIR; };
+		D45DDFD32C7501CB008503A1 /* lgvmlt */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = lgvmlt; sourceTree = BUILT_PRODUCTS_DIR; };
 		D45DDFD52C7501CB008503A1 /* LGV_ML_Trainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LGV_ML_Trainer.swift; sourceTree = "<group>"; };
 		D45DDFDA2C7502D1008503A1 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		D4C06A062C73D8AE00D1C94D /* LGV_ML_App.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = LGV_ML_App.docc; sourceTree = "<group>"; };
@@ -133,7 +133,7 @@
 			isa = PBXGroup;
 			children = (
 				D4F877112C73CF76001E2E20 /* LGV_ML_App.app */,
-				D45DDFD32C7501CB008503A1 /* LGV_ML_Trainer */,
+				D45DDFD32C7501CB008503A1 /* lgvmlt */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -181,9 +181,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		D45DDFD22C7501CB008503A1 /* LGV_ML_Trainer */ = {
+		D45DDFD22C7501CB008503A1 /* lgvmlt */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D45DDFD92C7501CB008503A1 /* Build configuration list for PBXNativeTarget "LGV_ML_Trainer" */;
+			buildConfigurationList = D45DDFD92C7501CB008503A1 /* Build configuration list for PBXNativeTarget "lgvmlt" */;
 			buildPhases = (
 				D45DDFCF2C7501CB008503A1 /* Sources */,
 				D45DDFD02C7501CB008503A1 /* Frameworks */,
@@ -193,12 +193,12 @@
 			);
 			dependencies = (
 			);
-			name = LGV_ML_Trainer;
+			name = lgvmlt;
 			packageProductDependencies = (
 				D45DDFDD2C750346008503A1 /* SwiftBMLSDK */,
 			);
 			productName = LGV_ML_Trainer;
-			productReference = D45DDFD32C7501CB008503A1 /* LGV_ML_Trainer */;
+			productReference = D45DDFD32C7501CB008503A1 /* lgvmlt */;
 			productType = "com.apple.product-type.tool";
 		};
 		D4F877102C73CF76001E2E20 /* LGV_ML_App */ = {
@@ -262,7 +262,7 @@
 			projectRoot = "";
 			targets = (
 				D4F877102C73CF76001E2E20 /* LGV_ML_App */,
-				D45DDFD22C7501CB008503A1 /* LGV_ML_Trainer */,
+				D45DDFD22C7501CB008503A1 /* lgvmlt */,
 			);
 		};
 /* End PBXProject section */
@@ -542,7 +542,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		D45DDFD92C7501CB008503A1 /* Build configuration list for PBXNativeTarget "LGV_ML_Trainer" */ = {
+		D45DDFD92C7501CB008503A1 /* Build configuration list for PBXNativeTarget "lgvmlt" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D45DDFD72C7501CB008503A1 /* Debug */,
