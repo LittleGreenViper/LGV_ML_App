@@ -28,9 +28,53 @@ import SwiftBMLSDK
 struct LGV_ML_Trainer {
     /* ################################################################## */
     /**
+     The Base URL for our meeting data server. This is an optional, but we allow it to be implicit, as the whole app is toast, if this is bad.
      */
-    init() {
-        print("Hello, World!")
+    private static let _dataServerURIBase = URL(string: "https://meetings.recovrr.org/entrypoint.php")
+    
+    /* ################################################################## */
+    /**
+     This is the URL session that we will be using to communicate with the server.
+     */
+    private let _session = URLSession(configuration: .default)
+    
+    /* ################################################################## */
+    /**
+     */
+    private let _query = SwiftBMLSDK_Query(serverBaseURI: _dataServerURIBase)
+
+    /* ################################################# */
+    /**
+     */
+    private func _fetchMeetings() async -> SwiftBMLSDK_Parser? {
+        var ret: SwiftBMLSDK_Parser?
+        
+        var dun = false // Stupid semaphore.
+        
+        _query.meetingSearch(specification: SwiftBMLSDK_Query.SearchSpecification()){ inSearchResults, inError in
+            guard nil == inError,
+                  let inSearchResults = inSearchResults
+            else {
+                ret = inSearchResults
+                dun = true
+                return
+            }
+            
+            ret = inSearchResults
+            dun = true
+        }
+        
+        while !dun { await Task.yield() }
+        
+        return ret
+    }
+
+    /* ################################################################## */
+    /**
+     Static initializer.
+     */
+    init() async {
+        let parser = await _fetchMeetings()
     }
 }
 
