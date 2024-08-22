@@ -21,7 +21,7 @@ import Foundation
 import SwiftBMLSDK
 
 /* ###################################################################################################################################### */
-// MARK: -  -
+// MARK: - ML Trainer for Meetings -
 /* ###################################################################################################################################### */
 /**
  */
@@ -40,28 +40,28 @@ struct LGV_ML_Trainer {
     
     /* ################################################################## */
     /**
+     This is our query instance, that we'll use to fetch the server data.
      */
     private let _query = SwiftBMLSDK_Query(serverBaseURI: _dataServerURIBase)
 
     /* ################################################# */
     /**
+     This is an async function (but it might as well be synchronous, since nothing is to be done, until it's finished), that reads the entire meeting database, then turns it into ML-friendly JSON.
+     
+     - returns: A JSON Data instance, with the simplified and parsed meeting data, all tied up in a bow for ML.
      */
-    private func _fetchMeetings() async -> SwiftBMLSDK_Parser? {
-        var ret: SwiftBMLSDK_Parser?
+    private func _fetchMeetings() async -> Data? {
+        var ret: Data?
         
         var dun = false // Stupid semaphore.
         
         _query.meetingSearch(specification: SwiftBMLSDK_Query.SearchSpecification()){ inSearchResults, inError in
+            defer { dun = true }
             guard nil == inError,
                   let inSearchResults = inSearchResults
-            else {
-                ret = inSearchResults
-                dun = true
-                return
-            }
+            else { return }
             
-            ret = inSearchResults
-            dun = true
+            ret = inSearchResults.meetings.asJSONData
         }
         
         while !dun { await Task.yield() }
@@ -71,10 +71,10 @@ struct LGV_ML_Trainer {
 
     /* ################################################################## */
     /**
-     Static initializer.
+     Basic initializer.
      */
     init() async {
-        let parser = await _fetchMeetings()
+        guard let jsonData = await _fetchMeetings() else { return }
+        print(jsonData.debugDescription)
     }
 }
-
