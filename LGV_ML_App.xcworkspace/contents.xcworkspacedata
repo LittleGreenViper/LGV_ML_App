@@ -30,6 +30,9 @@
       </FileRef>
    </Group>
    <FileRef
+      location = "group:../SwiftBMLSDK">
+   </FileRef>
+   <FileRef
       location = "group:LGV_ML_App.xcodeproj">
    </FileRef>
 </Workspace>

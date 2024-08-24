@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D43FF5AF2C77D0E7005B43E8 /* SwiftBMLSDK in Frameworks */ = {isa = PBXBuildFile; productRef = D43FF5AE2C77D0E7005B43E8 /* SwiftBMLSDK */; };
 		D45DDFD62C7501CB008503A1 /* LGV_ML_Trainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45DDFD52C7501CB008503A1 /* LGV_ML_Trainer.swift */; };
 		D45DDFDB2C7502D1008503A1 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45DDFDA2C7502D1008503A1 /* main.swift */; };
 		D4B704502C73D3FF0048691D /* RVS_Generic_Swift_Toolbox in Frameworks */ = {isa = PBXBuildFile; productRef = D4B7044F2C73D3FF0048691D /* RVS_Generic_Swift_Toolbox */; };
@@ -15,6 +14,7 @@
 		D4B704562C73D4210048691D /* RVS_UIKit_Toolbox in Frameworks */ = {isa = PBXBuildFile; productRef = D4B704552C73D4210048691D /* RVS_UIKit_Toolbox */; };
 		D4C06A072C73D8AE00D1C94D /* LGV_ML_App.docc in Sources */ = {isa = PBXBuildFile; fileRef = D4C06A062C73D8AE00D1C94D /* LGV_ML_App.docc */; };
 		D4D4411D2C73D1AE000ACA58 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D4D4411B2C73D1AE000ACA58 /* Localizable.strings */; };
+		D4DCB4FF2C7A205300C18B63 /* SwiftBMLSDK in Frameworks */ = {isa = PBXBuildFile; productRef = D4DCB4FE2C7A205300C18B63 /* SwiftBMLSDK */; };
 		D4F877372C73D01A001E2E20 /* LGV_ML_App_AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F8772D2C73D01A001E2E20 /* LGV_ML_App_AppDelegate.swift */; };
 		D4F877382C73D01A001E2E20 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D4F8772E2C73D01A001E2E20 /* Assets.xcassets */; };
 		D4F877392C73D01A001E2E20 /* LGV_ML_App_LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D4F877302C73D01A001E2E20 /* LGV_ML_App_LaunchScreen.storyboard */; };
@@ -58,7 +58,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D43FF5AF2C77D0E7005B43E8 /* SwiftBMLSDK in Frameworks */,
+				D4DCB4FF2C7A205300C18B63 /* SwiftBMLSDK in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -193,7 +193,7 @@
 			);
 			name = lgvmlt;
 			packageProductDependencies = (
-				D43FF5AE2C77D0E7005B43E8 /* SwiftBMLSDK */,
+				D4DCB4FE2C7A205300C18B63 /* SwiftBMLSDK */,
 			);
 			productName = LGV_ML_Trainer;
 			productReference = D45DDFD32C7501CB008503A1 /* lgvmlt */;
@@ -252,7 +252,6 @@
 				D4B7044E2C73D3FF0048691D /* XCRemoteSwiftPackageReference "RVS_Generic_Swift_Toolbox" */,
 				D4B704512C73D40F0048691D /* XCRemoteSwiftPackageReference "RVS_PersistentPrefs" */,
 				D4B704542C73D4210048691D /* XCRemoteSwiftPackageReference "RVS_UIKit_Toolbox" */,
-				D43FF5AB2C77CDD7005B43E8 /* XCRemoteSwiftPackageReference "SwiftBMLSDK" */,
 			);
 			productRefGroup = D4F877122C73CF76001E2E20 /* Products */;
 			projectDirPath = "";
@@ -569,14 +568,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		D43FF5AB2C77CDD7005B43E8 /* XCRemoteSwiftPackageReference "SwiftBMLSDK" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/LittleGreenViper/SwiftBMLSDK";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.18;
-			};
-		};
 		D4B7044E2C73D3FF0048691D /* XCRemoteSwiftPackageReference "RVS_Generic_Swift_Toolbox" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/RiftValleySoftware/RVS_Generic_Swift_Toolbox";
@@ -604,11 +595,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		D43FF5AE2C77D0E7005B43E8 /* SwiftBMLSDK */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = D43FF5AB2C77CDD7005B43E8 /* XCRemoteSwiftPackageReference "SwiftBMLSDK" */;
-			productName = SwiftBMLSDK;
-		};
 		D4B7044F2C73D3FF0048691D /* RVS_Generic_Swift_Toolbox */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = D4B7044E2C73D3FF0048691D /* XCRemoteSwiftPackageReference "RVS_Generic_Swift_Toolbox" */;
@@ -623,6 +609,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D4B704542C73D4210048691D /* XCRemoteSwiftPackageReference "RVS_UIKit_Toolbox" */;
 			productName = RVS_UIKit_Toolbox;
+		};
+		D4DCB4FE2C7A205300C18B63 /* SwiftBMLSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SwiftBMLSDK;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
