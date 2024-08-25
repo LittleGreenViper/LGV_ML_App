@@ -19,6 +19,7 @@
 
 import Foundation
 import SwiftBMLSDK
+import TabularData
 
 /* ###################################################################################################################################### */
 // MARK: - ML Trainer for Meetings -
@@ -74,7 +75,10 @@ struct LGV_ML_Trainer {
      Basic initializer.
      */
     init() async {
-        guard let jsonData = await _fetchMeetings() else { return }
-        print(jsonData.debugDescription)
+        guard let jsonData = await _fetchMeetings(),
+              let data = try? DataFrame(jsonData: jsonData)
+        else { return }
+        
+        print(data)
     }
 }
