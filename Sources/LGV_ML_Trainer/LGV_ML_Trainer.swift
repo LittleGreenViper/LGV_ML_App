@@ -76,8 +76,14 @@ struct LGV_ML_Trainer {
      */
     init() async {
         guard let jsonData = await _fetchMeetings(),
-              let data = try? DataFrame(jsonData: jsonData)
+              let data = try? DataFrame(jsonData: jsonData),
+              let desktopDirectoryPathString = NSSearchPathForDirectoriesInDomains(.desktopDirectory, .userDomainMask, true).first,
+              let desktopDirectoryPath = NSURL(string: desktopDirectoryPathString),
+              let jsonFilePath = desktopDirectoryPath.appendingPathComponent("meetingData.json")
         else { return }
+        
+        try? FileManager.default.removeItem(at: jsonFilePath)
+        FileManager.default.createFile(atPath: jsonFilePath.absoluteString, contents: jsonData)
         
         print(data)
     }
