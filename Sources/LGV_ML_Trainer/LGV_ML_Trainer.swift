@@ -48,11 +48,9 @@ struct LGV_ML_Trainer {
     /* ################################################# */
     /**
      This is an async function (but it might as well be synchronous, since nothing is to be done, until it's finished), that reads the entire meeting database, then turns it into ML-friendly JSON.
-     
-     - returns: A JSON Data instance, with the simplified and parsed meeting data, all tied up in a bow for ML.
      */
-    private func _fetchMeetings() async -> Data? {
-        var ret: Data?
+    private func _fetchMeetings() async -> (ids: [UInt64], descriptions: [String])? {
+        var ret: (ids: [UInt64], descriptions: [String])?
         
         var dun = false // Stupid semaphore.
         
@@ -62,7 +60,12 @@ struct LGV_ML_Trainer {
                   let inSearchResults = inSearchResults
             else { return }
             
-            ret = inSearchResults.meetings.asJSONData
+            let ids: [UInt64] = inSearchResults.meetings.map { $0.id }
+            let descriptions: [String] = inSearchResults.meetings.map { $0.descriptionString }
+            
+            guard ids.count == descriptions.count else { return }
+            
+            ret = (ids: ids, descriptions: descriptions)
         }
         
         while !dun { await Task.yield() }
@@ -75,15 +78,9 @@ struct LGV_ML_Trainer {
      Basic initializer.
      */
     init() async {
-        guard let jsonData = await _fetchMeetings(),
-              let data = try? DataFrame(jsonData: jsonData),
-              let desktopDirectoryPathString = NSSearchPathForDirectoriesInDomains(.desktopDirectory, .userDomainMask, true).first,
-              let desktopDirectoryPath = NSURL(string: desktopDirectoryPathString),
-              let jsonFilePath = desktopDirectoryPath.appendingPathComponent("meetingData.json")
-        else { return }
+        guard let csvData = await _fetchMeetings() else { return }
         
-        try? FileManager.default.removeItem(at: jsonFilePath)
-        FileManager.default.createFile(atPath: jsonFilePath.absoluteString, contents: jsonData)
+        let data: DataFrame = ["id": csvData.ids, "description": csvData.descriptions]
         
         print(data)
     }
