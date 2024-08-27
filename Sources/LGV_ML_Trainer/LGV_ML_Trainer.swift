@@ -81,7 +81,21 @@ struct LGV_ML_Trainer {
         guard let csvData = await _fetchMeetings() else { return }
         
         let data: DataFrame = ["id": csvData.ids, "description": csvData.descriptions]
-        
+        saveDataFrameToDesktopFile(data)
         print(data)
+    }
+    
+    /* ################################################################## */
+    /**
+     Saves the data as a CSV file, for checking and debugging.
+     */
+    func saveDataFrameToDesktopFile(_ inDataFrame: DataFrame) {
+        guard let desktopDirectoryPath = FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first else { return }
+        do {
+            let filePath = desktopDirectoryPath.appendingPathComponent("meetingData.csv")
+            try inDataFrame.writeCSV(to: filePath)
+        } catch {
+             print(error)
+        }
     }
 }
