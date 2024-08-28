@@ -577,7 +577,7 @@
 			repositoryURL = "https://github.com/LittleGreenViper/SwiftBMLSDK";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.19;
+				minimumVersion = 1.0.20;
 			};
 		};
 		D4B7044E2C73D3FF0048691D /* XCRemoteSwiftPackageReference "RVS_Generic_Swift_Toolbox" */ = {
