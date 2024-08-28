@@ -18,6 +18,7 @@
  */
 
 import Foundation
+import CoreLocation
 import SwiftBMLSDK
 import TabularData
 
@@ -97,5 +98,78 @@ struct LGV_ML_Trainer {
         } catch {
              print(error)
         }
+    }
+}
+
+/* ###################################################################################################################################### */
+// MARK: - Meeting Extensions -
+/* ###################################################################################################################################### */
+/**
+ This extension adds some basic interpretation methods to the base class.
+ */
+extension SwiftBMLSDK_Parser.Meeting {
+    /* ############################################# */
+    /**
+     This returns a natural-language, English description of the meeting (used for ML stuff).
+     */
+    public var descriptionString: String {
+        var descriptionString = "\"\(name)\" is " +
+                                (.hybrid == meetingType ? "a hybrid" : .virtual == meetingType ? "a virtual" : "an in-person") + " \((.na == organization ? "NA" : "Unknown")) meeting"
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "h:mm a"
+        let weekdayString = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"]
+        descriptionString += ", that meets every \(weekdayString[weekday - 1]), at \(formatter.string(from: startTime)), and lasts for \(Int(duration / 60)) minutes."
+        
+        let timeZoneString = timeZone.localizedName(for: .standard, locale: .current) ?? ""
+        
+        if !timeZoneString.isEmpty {
+            descriptionString += "\nIts time zone is \(timeZoneString)."
+        }
+        
+        let addressString = basicInPersonAddress
+        
+        if !addressString.isEmpty {
+            descriptionString += "\nIt meets at \(addressString.replacingOccurrences(of: "\n", with: ", "))."
+        }
+        
+        if let inPersonExtraInfo = locationInfo,
+           !inPersonExtraInfo.isEmpty {
+            descriptionString += "\n\(inPersonExtraInfo)"
+        }
+
+        if let coords = coords,
+           CLLocationCoordinate2DIsValid(coords) {
+            let lat = (coords.latitude * 100000).rounded(.toNearestOrEven) / 100000
+            let lng = (coords.longitude * 100000).rounded(.toNearestOrEven) / 100000
+            descriptionString += "\nIts latitude/longitude is \(lat), \(lng)."
+        }
+        
+        if let virtualURL = virtualURL {
+            descriptionString += "\nThe virtual URL is \(virtualURL.absoluteString)."
+        }
+        
+        if let virtualPhoneNumber = virtualPhoneNumber {
+            descriptionString += "\nThe virtual phone number is \(virtualPhoneNumber)."
+        }
+        
+        if let virtualInfo = virtualInfo,
+           !virtualInfo.isEmpty {
+            descriptionString += "\n\(virtualInfo)"
+        }
+        
+        if let comments = comments,
+           !comments.isEmpty {
+            descriptionString += "\n\(comments)"
+        }
+
+        formats.forEach {
+            let formatString = $0.description
+            if !formatString.isEmpty {
+                descriptionString += "\n\(formatString)"
+            }
+        }
+        
+        return descriptionString
     }
 }
