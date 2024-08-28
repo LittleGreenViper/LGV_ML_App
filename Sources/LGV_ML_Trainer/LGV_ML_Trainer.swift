@@ -50,8 +50,8 @@ struct LGV_ML_Trainer {
     /**
      This is an async function (but it might as well be synchronous, since nothing is to be done, until it's finished), that reads the entire meeting database, then turns it into ML-friendly JSON.
      */
-    private func _fetchMeetings() async -> (ids: [UInt64], descriptions: [String])? {
-        var ret: (ids: [UInt64], descriptions: [String])?
+    private func _fetchMeetings() async -> (ids: [UInt64], descriptions: [String], jsonData: Data?)? {
+        var ret: (ids: [UInt64], descriptions: [String], jsonData: Data?)?
         
         var dun = false // Stupid semaphore.
         
@@ -66,7 +66,7 @@ struct LGV_ML_Trainer {
             
             guard ids.count == descriptions.count else { return }
             
-            ret = (ids: ids, descriptions: descriptions)
+            ret = (ids: ids, descriptions: descriptions, jsonData: inSearchResults.meetings.asJSONData)
         }
         
         while !dun { await Task.yield() }
@@ -81,9 +81,17 @@ struct LGV_ML_Trainer {
     init() async {
         guard let csvData = await _fetchMeetings() else { return }
         
-        let data: DataFrame = ["id": csvData.ids, "description": csvData.descriptions]
-        saveDataFrameToDesktopFile(data)
-        print(data)
+        let simpleDataFrame: DataFrame = ["id": csvData.ids, "description": csvData.descriptions]
+        saveDataFrameToDesktopFile(simpleDataFrame)
+        
+        if let jsonData = csvData.jsonData,
+           let jsonDataFrame = try? DataFrame(jsonData: jsonData),
+           let jsonFileURL = FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first?.appendingPathComponent("meetingData.json") {
+            try? FileManager.default.removeItem(at: jsonFileURL)
+            FileManager.default.createFile(atPath: jsonFileURL.relativePath, contents: jsonData)
+            print(jsonDataFrame)
+            print(simpleDataFrame)
+        }
     }
     
     /* ################################################################## */
