@@ -82,14 +82,14 @@ struct LGV_ML_Trainer {
         guard let csvData = await _fetchMeetings() else { return }
         
         let simpleDataFrame: DataFrame = ["id": csvData.ids, "description": csvData.descriptions]
-        saveDataFrameToDesktopFile(simpleDataFrame)
+        saveDataFrameToDesktopFile(simpleDataFrame, "simple")
         
         if let jsonData = csvData.jsonData,
            let jsonDataFrame = try? DataFrame(jsonData: jsonData),
            let jsonFileURL = FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first?.appendingPathComponent("meetingData.json") {
             try? FileManager.default.removeItem(at: jsonFileURL)
             FileManager.default.createFile(atPath: jsonFileURL.relativePath, contents: jsonData)
-            print(jsonDataFrame)
+            saveDataFrameToDesktopFile(jsonDataFrame, "complex")
             print(simpleDataFrame)
         }
     }
@@ -98,11 +98,10 @@ struct LGV_ML_Trainer {
     /**
      Saves the data as a CSV file, for checking and debugging.
      */
-    func saveDataFrameToDesktopFile(_ inDataFrame: DataFrame) {
+    func saveDataFrameToDesktopFile(_ inDataFrame: DataFrame, _ inFileSuffix: String) {
         guard let desktopDirectoryPath = FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first else { return }
         do {
-            let filePath = desktopDirectoryPath.appendingPathComponent("meetingData.csv")
-            try inDataFrame.writeCSV(to: filePath)
+            try inDataFrame.writeCSV(to: desktopDirectoryPath.appendingPathComponent("meetingData.\(inFileSuffix).csv"))
         } catch {
              print(error)
         }
