@@ -118,7 +118,7 @@ extension SwiftBMLSDK_Parser.Meeting {
         
         let formatter = DateFormatter()
         formatter.dateFormat = "h:mm a"
-        let weekdayString = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"]
+        let weekdayString = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
         descriptionString += ", that meets every \(weekdayString[weekday - 1]), at \(formatter.string(from: startTime)), and lasts for \(Int(duration / 60)) minutes."
         
         let timeZoneString = timeZone.localizedName(for: .standard, locale: .current) ?? ""
@@ -146,11 +146,11 @@ extension SwiftBMLSDK_Parser.Meeting {
         }
         
         if let virtualURL = virtualURL {
-            descriptionString += "\nThe virtual URL is \(virtualURL.absoluteString)."
+            descriptionString += "\nThe virtual URL is \(virtualURL.absoluteString) ."
         }
         
         if let virtualPhoneNumber = virtualPhoneNumber {
-            descriptionString += "\nThe virtual phone number is \(virtualPhoneNumber)."
+            descriptionString += "\nThe virtual phone number is \(virtualPhoneNumber) ."
         }
         
         if let virtualInfo = virtualInfo,
