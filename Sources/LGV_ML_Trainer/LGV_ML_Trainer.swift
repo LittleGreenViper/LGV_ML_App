@@ -45,13 +45,28 @@ struct LGV_ML_Trainer {
      This is our query instance, that we'll use to fetch the server data.
      */
     private let _query = SwiftBMLSDK_Query(serverBaseURI: _dataServerURIBase)
+    
+    /* ################################################################## */
+    /**
+     */
+    var simpleDataFrame: DataFrame?
+    
+    /* ################################################################## */
+    /**
+     */
+    var taggerDataFrame: DataFrame?
+    
+    /* ################################################################## */
+    /**
+     */
+    var jsonDataFrame: DataFrame?
 
     /* ################################################# */
     /**
      This is an async function (but it might as well be synchronous, since nothing is to be done, until it's finished), that reads the entire meeting database, then turns it into ML-friendly JSON.
      */
-    private func _fetchMeetings() async -> (ids: [UInt64], descriptions: [String], text: [[String]], labels: [[String]], jsonData: Data?)? {
-        var ret: (ids: [UInt64], descriptions: [String], text: [[String]], labels: [[String]], jsonData: Data?)?
+    private func _fetchMeetings() async -> (ids: [UInt64], descriptions: [String], tokens: [[String]], labels: [[String]], jsonData: Data?)? {
+        var ret: (ids: [UInt64], descriptions: [String], tokens: [[String]], labels: [[String]], jsonData: Data?)?
         
         var dun = false // Stupid semaphore.
         
@@ -66,9 +81,9 @@ struct LGV_ML_Trainer {
             
             guard ids.count == descriptions.count else { return }
             
-            let text = inSearchResults.meetings.map { $0.mlData.text }
+            let tokens = inSearchResults.meetings.map { $0.mlData.tokens }
             let labels = inSearchResults.meetings.map { $0.mlData.labels }
-            ret = (ids: ids, descriptions: descriptions, text: text, labels: labels, jsonData: inSearchResults.meetings.asJSONData)
+            ret = (ids: ids, descriptions: descriptions, tokens: tokens, labels: labels, jsonData: inSearchResults.meetings.asJSONData)
         }
         
         while !dun { await Task.yield() }
@@ -78,24 +93,27 @@ struct LGV_ML_Trainer {
 
     /* ################################################################## */
     /**
-     Basic initializer.
      */
-    init() async {
+    mutating func loadData() async {
         guard let meetingData = await _fetchMeetings() else { return }
         
-        let simpleDataFrame: DataFrame = ["id": meetingData.ids, "description": meetingData.descriptions]
-        saveDataFrameToDesktopFile(simpleDataFrame, "simple")
-        
-        let taggerDataFrame: DataFrame = ["text": meetingData.text, "labels": meetingData.labels]
-        saveDataFrameToDesktopFile(taggerDataFrame, "textTagger")
+        let sdf: DataFrame = ["id": meetingData.ids, "description": meetingData.descriptions]
+        let tdf: DataFrame = ["tokens": meetingData.tokens, "labels": meetingData.labels]
         
         if let jsonData = meetingData.jsonData,
-           let jsonDataFrame = try? DataFrame(jsonData: jsonData),
+           let jdf = try? DataFrame(jsonData: jsonData),
            let jsonFileURL = FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first?.appendingPathComponent("meetingData.json") {
             try? FileManager.default.removeItem(at: jsonFileURL)
             FileManager.default.createFile(atPath: jsonFileURL.relativePath, contents: jsonData)
-            saveDataFrameToDesktopFile(jsonDataFrame, "complex")
+            jsonDataFrame = jdf
+            saveDataFrameToDesktopFile(jdf, "complex")
         }
+        
+        saveDataFrameToDesktopFile(sdf, "simple")
+        saveDataFrameToDesktopFile(tdf, "textTagger")
+        
+        simpleDataFrame = ["id": meetingData.ids, "description": meetingData.descriptions]
+        taggerDataFrame = ["tokens": meetingData.tokens, "labels": meetingData.labels]
     }
     
     /* ################################################################## */
@@ -123,18 +141,18 @@ extension SwiftBMLSDK_Parser.Meeting {
     /**
      This returns a natural-language, English description of the meeting (used for ML stuff), along with an Array of tags, matching the string, which is broken into tokens.
      */
-    public var mlData: (description: String, text: [String], labels: [String]) {
-        var text = [String]()
+    public var mlData: (description: String, tokens: [String], labels: [String]) {
+        var tokens = [String]()
         var labels = [String]()
         
         var descriptionString = "\"\(name)\""
         let meetingTypeString = (.hybrid == meetingType ? "hybrid" : .virtual == meetingType ? "virtual" : "local")
         let typeString = " is a " + meetingTypeString + " \((.na == organization ? "NA" : "Unknown")) meeting"
-        text.append(name)
+        tokens.append(name)
         labels.append("meetingName")
 
         descriptionString += typeString
-        text.append(meetingTypeString)
+        tokens.append(meetingTypeString)
         labels.append("meetingType")
 
         let formatter = DateFormatter()
@@ -143,23 +161,23 @@ extension SwiftBMLSDK_Parser.Meeting {
         let weekdayString = weekdayStringArray[weekday - 1]
         let durationString = String(Int(duration / 60))
         descriptionString += ", that meets every \(weekdayString), at \(formatter.string(from: startTime)), and lasts for \(durationString) minutes."
-        text.append(weekdayString.lowercased())
+        tokens.append(weekdayString.lowercased())
         labels.append("weekday")
-        text.append(formatter.string(from: startTime))
+        tokens.append(formatter.string(from: startTime))
         labels.append("startTime")
         formatter.dateFormat = "HH:mm"
-        text.append(formatter.string(from: startTime))
+        tokens.append(formatter.string(from: startTime))
         labels.append("startTime")
-        text.append(durationString)
+        tokens.append(durationString)
         labels.append("duration")
 
         let timeZoneString = timeZone.localizedName(for: .standard, locale: .current) ?? ""
-        text.append(timeZone.identifier)
+        tokens.append(timeZone.identifier)
         labels.append("timeZone")
 
         if !timeZoneString.isEmpty {
             descriptionString += "\nIts time zone is \(timeZoneString)."
-            text.append(timeZoneString)
+            tokens.append(timeZoneString)
             labels.append("timeZone")
         }
         
@@ -167,8 +185,6 @@ extension SwiftBMLSDK_Parser.Meeting {
         
         if !addressString.isEmpty {
             descriptionString += "\nIt meets at \(addressString)."
-            text.append(addressString)
-            labels.append("address")
         }
         
         if let inPersonExtraInfo = locationInfo,
@@ -205,13 +221,13 @@ extension SwiftBMLSDK_Parser.Meeting {
             let formatString = $0.description
             if !formatString.isEmpty {
                 descriptionString += "\n\(formatString)"
-                text.append(formatString)
+                tokens.append(formatString)
                 labels.append("format")
             }
-            text.append($0.name)
+            tokens.append($0.name)
             labels.append("format")
         }
         
-        return (description: descriptionString, text: text, labels: labels)
+        return (description: descriptionString, tokens: tokens, labels: labels)
     }
 }
