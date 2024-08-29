@@ -50,8 +50,8 @@ struct LGV_ML_Trainer {
     /**
      This is an async function (but it might as well be synchronous, since nothing is to be done, until it's finished), that reads the entire meeting database, then turns it into ML-friendly JSON.
      */
-    private func _fetchMeetings() async -> (ids: [UInt64], descriptions: [String], jsonData: Data?)? {
-        var ret: (ids: [UInt64], descriptions: [String], jsonData: Data?)?
+    private func _fetchMeetings() async -> (ids: [UInt64], descriptions: [String], text: [[String]], labels: [[String]], jsonData: Data?)? {
+        var ret: (ids: [UInt64], descriptions: [String], text: [[String]], labels: [[String]], jsonData: Data?)?
         
         var dun = false // Stupid semaphore.
         
@@ -62,11 +62,13 @@ struct LGV_ML_Trainer {
             else { return }
             
             let ids: [UInt64] = inSearchResults.meetings.map { $0.id }
-            let descriptions: [String] = inSearchResults.meetings.map { $0.descriptionString.description }
+            let descriptions: [String] = inSearchResults.meetings.map { $0.mlData.description }
             
             guard ids.count == descriptions.count else { return }
             
-            ret = (ids: ids, descriptions: descriptions, jsonData: inSearchResults.meetings.asJSONData)
+            let text = inSearchResults.meetings.map { $0.mlData.text }
+            let labels = inSearchResults.meetings.map { $0.mlData.labels }
+            ret = (ids: ids, descriptions: descriptions, text: text, labels: labels, jsonData: inSearchResults.meetings.asJSONData)
         }
         
         while !dun { await Task.yield() }
@@ -79,18 +81,20 @@ struct LGV_ML_Trainer {
      Basic initializer.
      */
     init() async {
-        guard let csvData = await _fetchMeetings() else { return }
+        guard let meetingData = await _fetchMeetings() else { return }
         
-        let simpleDataFrame: DataFrame = ["id": csvData.ids, "description": csvData.descriptions]
+        let simpleDataFrame: DataFrame = ["id": meetingData.ids, "description": meetingData.descriptions]
         saveDataFrameToDesktopFile(simpleDataFrame, "simple")
         
-        if let jsonData = csvData.jsonData,
+        let taggerDataFrame: DataFrame = ["text": meetingData.text, "labels": meetingData.labels]
+        saveDataFrameToDesktopFile(taggerDataFrame, "textTagger")
+        
+        if let jsonData = meetingData.jsonData,
            let jsonDataFrame = try? DataFrame(jsonData: jsonData),
            let jsonFileURL = FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first?.appendingPathComponent("meetingData.json") {
             try? FileManager.default.removeItem(at: jsonFileURL)
             FileManager.default.createFile(atPath: jsonFileURL.relativePath, contents: jsonData)
             saveDataFrameToDesktopFile(jsonDataFrame, "complex")
-            print(simpleDataFrame)
         }
     }
     
@@ -119,14 +123,16 @@ extension SwiftBMLSDK_Parser.Meeting {
     /**
      This returns a natural-language, English description of the meeting (used for ML stuff), along with an Array of tags, matching the string, which is broken into tokens.
      */
-    public var descriptionString: (description: String, text: [String], labels: [String]) {
+    public var mlData: (description: String, text: [String], labels: [String]) {
         var text = [String]()
         var labels = [String]()
         
         var descriptionString = "\"\(name)\""
         let meetingTypeString = (.hybrid == meetingType ? "hybrid" : .virtual == meetingType ? "virtual" : "local")
         let typeString = " is a " + meetingTypeString + " \((.na == organization ? "NA" : "Unknown")) meeting"
-        
+        text.append(name)
+        labels.append("meetingName")
+
         descriptionString += typeString
         text.append(meetingTypeString)
         labels.append("meetingType")
@@ -137,8 +143,10 @@ extension SwiftBMLSDK_Parser.Meeting {
         let weekdayString = weekdayStringArray[weekday - 1]
         let durationString = String(Int(duration / 60))
         descriptionString += ", that meets every \(weekdayString), at \(formatter.string(from: startTime)), and lasts for \(durationString) minutes."
-        text.append(weekdayString)
+        text.append(weekdayString.lowercased())
         labels.append("weekday")
+        text.append(formatter.string(from: startTime))
+        labels.append("startTime")
         formatter.dateFormat = "HH:mm"
         text.append(formatter.string(from: startTime))
         labels.append("startTime")
@@ -146,15 +154,21 @@ extension SwiftBMLSDK_Parser.Meeting {
         labels.append("duration")
 
         let timeZoneString = timeZone.localizedName(for: .standard, locale: .current) ?? ""
-        
+        text.append(timeZone.identifier)
+        labels.append("timeZone")
+
         if !timeZoneString.isEmpty {
             descriptionString += "\nIts time zone is \(timeZoneString)."
+            text.append(timeZoneString)
+            labels.append("timeZone")
         }
         
-        let addressString = basicInPersonAddress
+        let addressString = basicInPersonAddress.replacingOccurrences(of: "\n", with: ", ")
         
         if !addressString.isEmpty {
-            descriptionString += "\nIt meets at \(addressString.replacingOccurrences(of: "\n", with: ", "))."
+            descriptionString += "\nIt meets at \(addressString)."
+            text.append(addressString)
+            labels.append("address")
         }
         
         if let inPersonExtraInfo = locationInfo,
@@ -191,7 +205,11 @@ extension SwiftBMLSDK_Parser.Meeting {
             let formatString = $0.description
             if !formatString.isEmpty {
                 descriptionString += "\n\(formatString)"
+                text.append(formatString)
+                labels.append("format")
             }
+            text.append($0.name)
+            labels.append("format")
         }
         
         return (description: descriptionString, text: text, labels: labels)
