@@ -62,7 +62,7 @@ struct LGV_ML_Trainer {
             else { return }
             
             let ids: [UInt64] = inSearchResults.meetings.map { $0.id }
-            let descriptions: [String] = inSearchResults.meetings.map { $0.descriptionString }
+            let descriptions: [String] = inSearchResults.meetings.map { $0.descriptionString.description }
             
             guard ids.count == descriptions.count else { return }
             
@@ -117,17 +117,34 @@ struct LGV_ML_Trainer {
 extension SwiftBMLSDK_Parser.Meeting {
     /* ############################################# */
     /**
-     This returns a natural-language, English description of the meeting (used for ML stuff).
+     This returns a natural-language, English description of the meeting (used for ML stuff), along with an Array of tags, matching the string, which is broken into tokens.
      */
-    public var descriptionString: String {
-        var descriptionString = "\"\(name)\" is " +
-                                (.hybrid == meetingType ? "a hybrid" : .virtual == meetingType ? "a virtual" : "an in-person") + " \((.na == organization ? "NA" : "Unknown")) meeting"
+    public var descriptionString: (description: String, text: [String], labels: [String]) {
+        var text = [String]()
+        var labels = [String]()
         
+        var descriptionString = "\"\(name)\""
+        let meetingTypeString = (.hybrid == meetingType ? "hybrid" : .virtual == meetingType ? "virtual" : "local")
+        let typeString = " is a " + meetingTypeString + " \((.na == organization ? "NA" : "Unknown")) meeting"
+        
+        descriptionString += typeString
+        text.append(meetingTypeString)
+        labels.append("meetingType")
+
         let formatter = DateFormatter()
         formatter.dateFormat = "h:mm a"
-        let weekdayString = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-        descriptionString += ", that meets every \(weekdayString[weekday - 1]), at \(formatter.string(from: startTime)), and lasts for \(Int(duration / 60)) minutes."
-        
+        let weekdayStringArray = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+        let weekdayString = weekdayStringArray[weekday - 1]
+        let durationString = String(Int(duration / 60))
+        descriptionString += ", that meets every \(weekdayString), at \(formatter.string(from: startTime)), and lasts for \(durationString) minutes."
+        text.append(weekdayString)
+        labels.append("weekday")
+        formatter.dateFormat = "HH:mm"
+        text.append(formatter.string(from: startTime))
+        labels.append("startTime")
+        text.append(durationString)
+        labels.append("duration")
+
         let timeZoneString = timeZone.localizedName(for: .standard, locale: .current) ?? ""
         
         if !timeZoneString.isEmpty {
@@ -177,6 +194,6 @@ extension SwiftBMLSDK_Parser.Meeting {
             }
         }
         
-        return descriptionString
+        return (description: descriptionString, text: text, labels: labels)
     }
 }
